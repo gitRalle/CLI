@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+group 'org.wne'
+version '1.0-SNAPSHOT'
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'CLI-Fat-JAR',
+                'Implementation-Version': '1.0.0'
+    }
+    baseName = project.name
+    from { configurations.compile.collect {it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+compileJava {
+    options.compilerArgs.add("-parameters")
+}
