@@ -10,6 +10,7 @@ import exception.ParseException;
 import iface.*;
 import java.lang.reflect.*;
 import java.util.*;
+
 import static util.AnnotationUtils.*;
 import static util.StringUtils.splitAfterFirst;
 import static util.StringUtils.permute;
@@ -24,14 +25,6 @@ public final class Configuration implements IConfiguration {
     public Configuration(IConsole console) {
         this.console = console;
         this.map = new Map();
-    }
-
-    public IConsole getConsole() {
-        return console;
-    }
-
-    public IMap<String, IReflection> getMap() {
-        return map;
     }
 
     @Override
@@ -100,7 +93,16 @@ public final class Configuration implements IConfiguration {
                         regex.append(permute(args));
                     }
                     regex.append("$");
-                    map.put(regex.toString(), (input) -> {
+
+                    if (map.duplicate(regex.toString())) {
+                        throw new IllegalArgumentException(
+                                "no two or more methods annotated with @Command may have the same " +
+                                        "final reg ex pattern, which is determined by " +
+                                        "(className/keyword) + methodName/keyword + argName(s)/keyword(s)."
+                        );
+                    }
+
+                      map.put(regex.toString(), (input) -> {
                         try {
                             invoke(new MethodBundle(object, method, params), input);
                         }
@@ -110,9 +112,9 @@ public final class Configuration implements IConfiguration {
                     });
 
                     if (hasNoMatchMessage(method)) {
-                        map.put("^" + (hasIgnoreKeyword(objectClass) ?
-                                        "" : getKeyword(objectClass).concat("\\s")) + getKeyword(method) + "(|.*)$",
-                                (input) -> console.println(getNoMatchMessage(method)));
+                        String key = "^" + (hasIgnoreKeyword(objectClass) ? "" : getKeyword(objectClass)
+                                .concat("\\s")).concat(getKeyword(method)).concat("(|.*)$");
+                        map.append(key, (input) -> console.printerr(getNoMatchMessage(method)));
                     }
                 }
             }
@@ -155,5 +157,13 @@ public final class Configuration implements IConfiguration {
             }
         }
         methodBundle.getMethod().invoke(methodBundle.getObject(), args);
+    }
+
+    public IConsole getConsole() {
+        return console;
+    }
+
+    public IMap<String, IReflection> getMap() {
+        return map;
     }
 }

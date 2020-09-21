@@ -33,12 +33,31 @@ public class Startup {
         }
     }
 
-    // used for debugging.
-    public void outputKeys() {
-        ((Map) config.getMap()).outputKeys();
-    }
 
-    public IConfiguration getConfig() {
+    public IConfiguration getConfig()
+    {
         return config;
     }
+
+    /**
+     * <summary>
+     *     Outputs all the keys from the main configuration IMap.
+     * </summary>
+     *
+     * @return this object instance.
+     */
+    public Startup outputKeys() {
+        ((Map) config.getMap()).outputKeys();
+        return this;
+    }
+
+    /**
+     * used for debugging.
+     * @return this object instance.
+     */
+    public Startup outputNotFoundKeys() {
+        ((Map) config.getMap()).outputNotFoundKeys();
+        return this;
+    }
+
 }

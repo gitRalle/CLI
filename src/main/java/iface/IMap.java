@@ -1,8 +1,13 @@
 package iface;
 
-public interface IMap<K, ILambda> {
+public interface IMap<K, IReflection> {
 
-    ILambda match(K k);
+    IReflection match(K k);
 
-    ILambda put(K k, ILambda v);
+    IReflection put(K k, IReflection v);
+
+    IReflection append(K k, IReflection v);
+
+    boolean duplicate(String s);
+
 }
