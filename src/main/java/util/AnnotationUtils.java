@@ -3,6 +3,8 @@ package util;
 import annotation.Arg;
 import annotation.Command;
 import annotation.Controller;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -51,8 +53,7 @@ public class AnnotationUtils {
         return Modifier.isStatic(method.getModifiers());
     }
 
-    public static boolean isVoid(Method method) {
-        assert method != null;
+    public static boolean isVoid(@NotNull Method method) {
         return method.getReturnType().equals(Void.TYPE);
     }
 
@@ -68,15 +69,15 @@ public class AnnotationUtils {
                 param.getAnnotation(Arg.class).optional();
     }
 
-    public static boolean hasNoMatchMessage(Method method) {
+    public static boolean hasArgsDoNotMatchMessage(Method method) {
         assert method != null;
         return method.isAnnotationPresent(Command.class) &&
-                !isEmptyOrNull(method.getAnnotation(Command.class).notFoundMessage());
+                !isEmptyOrNull(method.getAnnotation(Command.class).argsDoNotMatchMessage());
     }
 
-    public static String getNoMatchMessage(Method method) {
+    public static String getArgsDoNotMatchMessage(Method method) {
         assert method != null;
-        String errorMessage = method.getAnnotation(Command.class).notFoundMessage();
+        String errorMessage = method.getAnnotation(Command.class).argsDoNotMatchMessage();
         return isEmptyOrNull(errorMessage) ? null : errorMessage;
     }
 
@@ -93,7 +94,8 @@ public class AnnotationUtils {
         return isEmptyOrNull(keyword) ? method.getName().toLowerCase() : keyword;
     }
 
-    public static String getKeyword(Parameter param) {
+    @Contract("null -> fail")
+    public static @NotNull String getKeyword(Parameter param) {
         assert param != null;
         if (hasAnnotation(param)) {
             String keyword = param.getAnnotation(Arg.class).keyword().toLowerCase();
@@ -103,6 +105,7 @@ public class AnnotationUtils {
     }
 
     public static boolean isPrimitive(Class<?> object) {
+        assert object != null;
         return new HashSet<Class<?>>() {
             {
                 add(String.class);

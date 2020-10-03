@@ -18,12 +18,15 @@ public class CLITest {
         config.addControllers(new ArrayList<>() {{
             add(new TestController());
         }});
+
         return config;
     }
 
     public void start(IConfiguration config) {
         Startup startup = new Startup(config);
-        startup.outputKeys().outputNotFoundKeys().run();
+        while (true) {
+            startup.run(config.console().read());
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 package iface;
 
-public interface IMap<K, IReflection> {
+public interface IReflectionMap<K, IReflection> {
 
     IReflection match(K k);
 
@@ -9,5 +9,4 @@ public interface IMap<K, IReflection> {
     IReflection append(K k, IReflection v);
 
     boolean duplicate(String s);
-
 }

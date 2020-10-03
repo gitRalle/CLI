@@ -2,12 +2,12 @@ package sample;
 
 import annotation.Arg;
 import annotation.Command;
-import annotation.Controller;
+import data.Controller;
 import data.Console;
 import iface.*;
 
-@Controller(ignoreKeyword = true)
-public class TestController {
+@annotation.Controller(ignoreKeyword = true)
+public class TestController extends Controller {
 
     private final IConsole console;
 
@@ -17,24 +17,29 @@ public class TestController {
         console = new Console();
     }
 
-    @Command(notFoundMessage = "test")
+    @Command(argsDoNotMatchMessage = "test")
     public void test() {
         console.println("test");
     }
 
-    @Command(notFoundMessage = "test [b:bool]")
+    @Command(argsDoNotMatchMessage = "test [b:bool]")
     public void test(boolean b) {
-        console.println("test b:bool");
+        console.println(String.valueOf(invokeState().successful()));
     }
 
-    @Command(notFoundMessage = "test [b:bool] (i:int)")
-    public void test(boolean b, @Arg(optional = true) int i) {
-        console.println("test b:bool, (i:int)");
+    @Command(keyword = "test")
+    public void testy(boolean b) {
+
     }
 
     /*
-    // Todo: 1. print out all notFoundMessage(s) when match occurs.
-       Todo: 2. rm optional arg part of regex and put into set -> throw exception if not distinct.
-     */
+    @Command(keyword = "test", argsDoNotMatchMessage = "test [b:bool] (i:int)")
+    public void test(boolean b, @Arg(optional = true) int i) {
+        console.println(String.format(
+                "successful: %s%ndefaulted(i): %s",
+                invokeState().successful(), invokeState().defaulted("i")
+        ));
 
+    }
+     */
 }

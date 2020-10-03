@@ -5,4 +5,6 @@ public interface IConsole {
     void println(String text);
 
     void printerr(String text);
+
+    String read();
 }

@@ -18,3 +18,11 @@ task fatJar(type: Jar) {
 compileJava {
     options.compilerArgs.add("-parameters")
 }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.jetbrains', name: 'annotations', version: '15.0'
+}

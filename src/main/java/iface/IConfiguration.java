@@ -1,12 +1,14 @@
 package iface;
 
+import config.ReflectionMap;
+
 import java.util.Collection;
 
 public interface IConfiguration {
 
-    IConsole getConsole();
+    IConsole console();
 
-    IMap<String, IReflection> getMap();
+    ReflectionMap<String, IReflection> map();
 
     void addControllers(Collection<Object> controllers);
 }

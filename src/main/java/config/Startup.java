@@ -1,10 +1,7 @@
 package config;
 
-import data.Map;
 import iface.IConfiguration;
 import iface.IReflection;
-
-import java.util.Scanner;
 
 public class Startup {
 
@@ -18,19 +15,24 @@ public class Startup {
         this.config = configuration;
     }
 
-    public void run() {
-        while (true) {
-            String input = new Scanner(System.in).nextLine();
-            IReflection action = config.getMap().match(input);
-            (action != null ? action : new IReflection() {
+    /**
+     * <summary>Matches the input with the contents of the configured IMap.
+     * If a match occurs; the respective functional interface implementation is invoked.
+     * If no match occurs; a default String will be outputted into the console,
+     * using the printerr method of the configured IConsole class.</summary>
+     *
+     * @param input the user input from the console.
+     */
+    public void run(String input) {
+            IReflection method = config.map().match(input);
+            (method != null ? method : new IReflection() {
                 @Override
                 public void invoke(String input) {
-                    config.getConsole().printerr(
+                    config.console().printerr(
                             "'" + input + "' is not recognized as an internal command."
                     );
                 }
             }).invoke(input);
-        }
     }
 
 
@@ -38,26 +40,4 @@ public class Startup {
     {
         return config;
     }
-
-    /**
-     * <summary>
-     *     Outputs all the keys from the main configuration IMap.
-     * </summary>
-     *
-     * @return this object instance.
-     */
-    public Startup outputKeys() {
-        ((Map) config.getMap()).outputKeys();
-        return this;
-    }
-
-    /**
-     * used for debugging.
-     * @return this object instance.
-     */
-    public Startup outputNotFoundKeys() {
-        ((Map) config.getMap()).outputNotFoundKeys();
-        return this;
-    }
-
 }
