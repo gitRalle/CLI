@@ -3,8 +3,8 @@ package util;
 import annotation.Arg;
 import annotation.Command;
 import annotation.Controller;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -14,6 +14,10 @@ import java.util.Set;
 
 import static util.StringUtils.isEmptyOrNull;
 
+/**
+ * <summary>Class which declares static utility methods for working with the classes of the
+ * annotation package.</summary>
+ */
 public class AnnotationUtils {
 
     public static final String defaultValueRegex = "\\S*";
@@ -69,15 +73,15 @@ public class AnnotationUtils {
                 param.getAnnotation(Arg.class).optional();
     }
 
-    public static boolean hasArgsDoNotMatchMessage(Method method) {
+    public static boolean hasPartialMatchMessage(Method method) {
         assert method != null;
         return method.isAnnotationPresent(Command.class) &&
-                !isEmptyOrNull(method.getAnnotation(Command.class).argsDoNotMatchMessage());
+                !isEmptyOrNull(method.getAnnotation(Command.class).partialMatchMessage());
     }
 
-    public static String getArgsDoNotMatchMessage(Method method) {
+    public static @Nullable String getPartialMatchMessage(Method method) {
         assert method != null;
-        String errorMessage = method.getAnnotation(Command.class).argsDoNotMatchMessage();
+        String errorMessage = method.getAnnotation(Command.class).partialMatchMessage();
         return isEmptyOrNull(errorMessage) ? null : errorMessage;
     }
 
@@ -94,7 +98,6 @@ public class AnnotationUtils {
         return isEmptyOrNull(keyword) ? method.getName().toLowerCase() : keyword;
     }
 
-    @Contract("null -> fail")
     public static @NotNull String getKeyword(Parameter param) {
         assert param != null;
         if (hasAnnotation(param)) {

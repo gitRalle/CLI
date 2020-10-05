@@ -3,8 +3,11 @@ package util;
 import exception.ParseException;
 
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 
+/**
+ * <summary>Class which declares static utility methods for working with Objects,
+ * is only used in this project by the config.Configuration class.</summary>
+ */
 public class ObjectUtils {
 
     public static Object toObject(Type type, String value)

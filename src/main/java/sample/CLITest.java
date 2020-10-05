@@ -18,7 +18,6 @@ public class CLITest {
         config.addControllers(new ArrayList<>() {{
             add(new TestController());
         }});
-
         return config;
     }
 

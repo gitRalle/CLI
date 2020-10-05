@@ -4,6 +4,9 @@ import exception.NoSuchDelimiterException;
 
 import java.util.*;
 
+/**
+ * <summary>Class which declares static utility methods for working with Strings.</summary>
+ */
 public class StringUtils {
 
     public static String splitAfterFirst(String s, String delimiter) throws NoSuchDelimiterException {

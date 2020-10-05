@@ -18,20 +18,64 @@ import static util.StringUtils.permute;
 import static util.ObjectUtils.toObject;
 import static util.ObjectUtils.toDefaultValue;
 
+/**
+ * <summary>Class is responsible for initialization and configuration of the the underlying ReflectionMap,
+ * consisting of String, IReflection entries. Also holds references for both the IConsole, and ReflectionMap.
+ * </summary>
+ */
 public final class Configuration implements IConfiguration {
 
+    /**
+     * <summary>The IConsole field.</summary>
+     */
     private final IConsole console;
-    private final ReflectionMap<String, IReflection> map;
 
-    private final Set<String> set = new HashSet<>();
+    /**
+     * <summary>The ReflectionMap field.</summary>
+     */
+    private final ReflectionMap map;
 
+    /**
+     * <summary>A Set which is used to store copies of the regex patterns;
+     * minus the sub-regex patterns derived from any optional arguments.
+     * Is used to check for distinctiveness between regex patterns,
+     * so that no duplicates are put into the underlying map.</summary>
+     */
+    private final Set<String> regexSet = new HashSet<>();
+
+    /**
+     * Constructor, which initializes the IConsole, and ReflectionMap fields.
+     *
+     * @param console the IConsole instance to be assigned to the console field.
+     */
     public Configuration(IConsole console) {
         this.console = console;
-        this.map = new ReflectionMap<>();
+        this.map = new ReflectionMap();
     }
 
+    /**
+     * Default Constructor, not to be invoked.
+     *
+     * @throws UnsupportedOperationException if Constructor is invoked.
+     */
+    public Configuration() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException(
+                "this Constructor is not be invoked."
+        );
+    }
+
+    /**
+     * <summary>The heavy-lifting config method, which uses the java.reflection api to create regex
+     * patterns from the 'properties' of annotated instance methods of the classes passed
+     * as an argument. </summary>
+     *
+     * @param controllers the collection of classes containing annotated methods to be configured.
+     * @throws IllegalArgumentException if insufficient annotations are present, or if
+     * an annotated method does not have the modifier void, or if an annotated method is a class method,
+     * or if the same regex pattern was derived from two or more annotated methods.
+     */
     @Override
-    public void addControllers(final @NotNull Collection<Object> controllers) {
+    public void addControllers(final @NotNull Collection<Object> controllers) throws IllegalArgumentException {
         for (Object object : controllers) {
             Class<?> objectClass = object.getClass();
 
@@ -99,9 +143,9 @@ public final class Configuration implements IConfiguration {
                     regex.append("$");
                     setRegex.append("$");
 
-                    if (!set.add(setRegex.toString())) {
+                    if (!regexSet.add(setRegex.toString())) {
                         throw new IllegalArgumentException(
-                                "the final regex pattern derived from a method annotated with @Command, " +
+                                "The final regex pattern derived from a method annotated with @Command, " +
                                         "and it's non-optional arguments must be distinct."
                         );
                     }
@@ -114,24 +158,42 @@ public final class Configuration implements IConfiguration {
                         }
                     });
 
-                    if (hasArgsDoNotMatchMessage(method)) {
+                    if (hasPartialMatchMessage(method)) {
                         String key = "^" + (hasIgnoreKeyword(objectClass) ? "" : getKeyword(objectClass)
                                 .concat("\\s")).concat(getKeyword(method)).concat("(|.*)$");
-                        map.append(key, (input) -> console.printerr(getArgsDoNotMatchMessage(method)));
+                        map.append(key, (input) -> console.printerr(getPartialMatchMessage(method)));
                     }
                 }
             }
         }
     }
 
+    /**
+     * <summary>Returns the IConsole instance passed to the Constructor.</summary>
+     *
+     * @return the IConsole instance.
+     */
     public IConsole console() {
         return console;
     }
 
-    public ReflectionMap<String, IReflection> map() {
+    /**
+     * <summary>Returns the ReflectionMap instance, initialized by the Constructor.</summary>
+     *
+     * @return the ReflectionMap instance.
+     */
+    public ReflectionMap map() {
         return map;
     }
 
+    /**
+     * <summary>Invokes the method passed to it as an argument,
+     * with the proper argument values parsed from this method's argument input String.</summary>
+     *
+     * @param methodBundle object which holds a bundle of information pertaining to the Method to be invoked.
+     * @param input the user input.
+     * @throws Exception if something unforeseeable has happened.
+     */
     private void invoke(@NotNull MethodBundle methodBundle, String input)
             throws Exception
     {
