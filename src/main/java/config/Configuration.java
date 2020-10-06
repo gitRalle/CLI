@@ -9,6 +9,7 @@ import exception.ParseException;
 import iface.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -19,7 +20,7 @@ import static util.ObjectUtils.toObject;
 import static util.ObjectUtils.toDefaultValue;
 
 /**
- * <summary>Class is responsible for initialization and configuration of the the underlying ReflectionMap,
+ * <summary>Class is responsible for initialization, and configuration of the the underlying ReflectionMap --
  * consisting of String, IReflection entries. Also holds references for both the IConsole, and ReflectionMap.
  * </summary>
  */
@@ -60,14 +61,14 @@ public final class Configuration implements IConfiguration {
      */
     public Configuration() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
-                "this Constructor is not be invoked."
+                "this Constructor is not be used."
         );
     }
 
     /**
      * <summary>The heavy-lifting config method, which uses the java.reflection api to create regex
-     * patterns from the 'properties' of annotated instance methods of the classes passed
-     * as an argument. </summary>
+     * patterns from the 'properties' of annotated instance methods belonging to the classes passed
+     * to this method as an argument. </summary>
      *
      * @param controllers the collection of classes containing annotated methods to be configured.
      * @throws IllegalArgumentException if insufficient annotations are present, or if
@@ -145,7 +146,7 @@ public final class Configuration implements IConfiguration {
 
                     if (!regexSet.add(setRegex.toString())) {
                         throw new IllegalArgumentException(
-                                "The final regex pattern derived from a method annotated with @Command, " +
+                                "the final regex pattern derived from a method annotated with @Command, " +
                                         "and it's non-optional arguments must be distinct."
                         );
                     }
@@ -169,7 +170,7 @@ public final class Configuration implements IConfiguration {
     }
 
     /**
-     * <summary>Returns the IConsole instance passed to the Constructor.</summary>
+     * <summary>Get method for this class's IConsole instance.</summary>
      *
      * @return the IConsole instance.
      */
@@ -178,7 +179,7 @@ public final class Configuration implements IConfiguration {
     }
 
     /**
-     * <summary>Returns the ReflectionMap instance, initialized by the Constructor.</summary>
+     * <summary>GET method for this class's ReflectionMap instance.</summary>
      *
      * @return the ReflectionMap instance.
      */
@@ -188,11 +189,11 @@ public final class Configuration implements IConfiguration {
 
     /**
      * <summary>Invokes the method passed to it as an argument,
-     * with the proper argument values parsed from this method's argument input String.</summary>
+     * with the proper argument values, parsed from this method's argument input String.</summary>
      *
      * @param methodBundle object which holds a bundle of information pertaining to the Method to be invoked.
      * @param input the user input.
-     * @throws Exception if something unforeseeable has happened.
+     * @throws Exception if the invocation of the underlying method fails.
      */
     private void invoke(@NotNull MethodBundle methodBundle, String input)
             throws Exception
@@ -222,7 +223,7 @@ public final class Configuration implements IConfiguration {
                 }
             }
 
-            catch (IllegalArgumentException ex) {
+            catch (IllegalArgumentException | ArrayIndexOutOfBoundsException ex) {
                 ex.printStackTrace();
             }
             finally {

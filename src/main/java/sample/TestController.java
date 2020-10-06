@@ -6,7 +6,7 @@ import data.Controller;
 import data.Console;
 import iface.*;
 
-@annotation.Controller
+@annotation.Controller(ignoreKeyword = true)
 public class TestController extends Controller {
 
     private final IConsole console;
@@ -22,16 +22,6 @@ public class TestController extends Controller {
         console.println("test");
     }
 
-    @Command(partialMatchMessage = "test [b:bool]")
-    public void test(boolean b) {
-        console.println(String.valueOf(invokeState().successful()));
-    }
-
-    @Command(keyword = "test")
-    public void testy(boolean b) {
-
-    }
-
     @Command(keyword = "test", partialMatchMessage = "test [b:bool] (i:int)")
     public void test(boolean b, @Arg(optional = true) int i) {
         console.println(String.format(
@@ -39,5 +29,11 @@ public class TestController extends Controller {
                 invokeState().successful(), invokeState().defaulted("i")
         ));
     }
+
+    @Command
+    public void function(@Arg(keyword = "-s") String s) {
+        console.println(s);
+    }
+
 
 }

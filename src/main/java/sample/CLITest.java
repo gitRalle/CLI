@@ -5,11 +5,12 @@ import config.Configuration;
 import config.Startup;
 import data.Console;
 import iface.IConfiguration;
+
 import java.util.ArrayList;
 
 public class CLITest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         CLITest app = new CLITest();
         app.start(app.configure(new Configuration(new Console())));
     }

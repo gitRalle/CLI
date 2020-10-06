@@ -4,7 +4,7 @@ import iface.IConfiguration;
 import iface.IReflection;
 
 /**
- * <summary>This class presents a sample way to start/run your console application.</summary>
+ * <summary>This class presents a sample means to start/run your console application.</summary>
  */
 public class Startup {
 
@@ -31,12 +31,12 @@ public class Startup {
     }
 
     /**
-     * <summary>Matches the input with the contents of the configured ReflectionMap.
-     * If a match occurs; the respective Method is invoked.
-     * If no match occurs; a default String will be print in the console,
-     * using the printerr method of the configured IConsole class.</summary>
+     * <summary>Matches the supplied String input with the keys of the underlying,
+     * configured ReflectionMap. The respective IReflection object is invoked if a match is found.
+     * Otherwise a default invocation is called, resulting in a default String being
+     * outputted into the console.</summary>
      *
-     * @param input the user input to be evaluated.
+     * @param input the String to be matched against.
      */
     public void run(String input) {
             IReflection method = config.map().match(input);
@@ -51,9 +51,8 @@ public class Startup {
     }
 
 
-    // Todo: unnecessary?
     /**
-     * <summary>Returns the reference for the IConfiguration instance passed to the Constructor.</summary>
+     * <summary>GET method for the this class's IConfiguration instance.</summary>
      *
      * @return the IConfiguration instance.
      */
