@@ -6,26 +6,23 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <summary>Annotate your @Command-annotated Method's Parameters with this annotation, if you'd like to
- * explicitly set their keyword, or map them as optional Parameters.</summary>
+ * Annotate your command annotated method's parameters with this annotation if you'd like to explicitly set their keyword,
+ * and/or flag/un-flag them as optional parameters.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface Arg {
 
     /**
-     * <summary>String which defines the regex pattern, to which an argument belonging to a @Command-annotated
-     * method maps to.</summary>
+     * Use this annotation field to explicitly set a keyword for this parameter.
+     * If the compilerArg -parameters is set then the value of this annotation field defaults to parameter.getName().
      *
-     * Defaults to the name of the Parameter (which is only recorded in the java file, if
-     * the -parameters compiler argument has been supplied).
      * @return the keyword.
      */
     String keyword() default "";
 
     /**
-     * <summary>Boolean value which determines whether or not the annotated Parameter should be optionally
-     * mapped to the underlying regex pattern.</summary>
+     * Use this annotation field to flag/un-flag this parameter as being optional.
      *
      * @return the boolean value.
      */

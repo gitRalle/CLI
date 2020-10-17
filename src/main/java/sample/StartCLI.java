@@ -1,32 +1,26 @@
-package config;
+package sample;
 
-import iface.IConfiguration;
+import config.Configuration;
+import config.ConfigurationBuilder;
 import iface.IReflection;
+import model.Console;
 
 /**
  * <summary>This class presents a sample means to start/run your console application.</summary>
  */
-public class Startup {
+public class StartCLI {
 
     /**
      * <summary>The IConfiguration field.</summary>
      */
-    private final IConfiguration config;
+    private final Configuration config;
 
-    /**
-     * Constructor, sets the IConfiguration field.
-     *
-     * @param configuration the IConfiguration instance to be used by this class.
-     */
-    public Startup(IConfiguration configuration) throws IllegalArgumentException {
-        if (configuration == null)
-            throw new IllegalArgumentException(
-                    "configuration must not be null."
-            );
-        this.config = configuration;
+    public StartCLI(Configuration config)
+    {
+        this.config = config;
     }
 
-    public Startup() throws UnsupportedOperationException {
+    public StartCLI() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
@@ -39,8 +33,8 @@ public class Startup {
      * @param input the String to be matched against.
      */
     public void run(String input) {
-            IReflection method = config.map().match(input);
-            (method != null ? method : new IReflection() {
+            IReflection reflection = config.map().match(input);
+            (reflection != null ? reflection : new IReflection() {
                 @Override
                 public void invoke(String input) {
                     config.console().printerr(
@@ -50,14 +44,34 @@ public class Startup {
             }).invoke(input);
     }
 
-
     /**
      * <summary>GET method for the this class's IConfiguration instance.</summary>
      *
      * @return the IConfiguration instance.
      */
-    public IConfiguration getConfig()
+    private Configuration getConfig()
+
     {
         return config;
+    }
+
+    public static void launch() throws Exception
+    {
+        StartCLI startup = new StartCLI(new ConfigurationBuilder(new Console())
+                .build()
+                .getConfig());
+        while (true)
+        {
+            startup.run(startup.getConfig().console().read());
+        }
+    }
+
+    public static void launch(Configuration config)
+    {
+        StartCLI startup = new StartCLI(config);
+        while (true)
+        {
+            startup.run(startup.getConfig().console().read());
+        }
     }
 }

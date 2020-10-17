@@ -5,11 +5,20 @@ import exception.ParseException;
 import java.lang.reflect.Type;
 
 /**
- * <summary>Class which declares static utility methods for working with Objects,
- * is only used in this project by the config.Configuration class.</summary>
+ * This class declares utility methods used by the config.Configuration class for working with objects.
  */
 public class ObjectUtils {
 
+    /**
+     * This method parses the specified value into an object of the specified type.
+     *
+     * @param type the type.
+     * @param value the value.
+     * @return an object.
+     * @throws IllegalArgumentException in the event of a null specified value.
+     * @throws ParseException in the event of a NumberFormatException being thrown during
+     * parsing.
+     */
     public static Object toObject(Type type, String value)
             throws IllegalArgumentException, ParseException
     {
@@ -129,6 +138,14 @@ public class ObjectUtils {
         );
     }
 
+    /**
+     * This method returns an object with the appropriate default value based on the
+     * specified type.
+     *
+     * @param type the type.
+     * @return a defaulted object.
+     * @throws IllegalArgumentException in the event of a specified type not being a primitive datatype/wrapper class.
+     */
     public static Object toDefaultValue(Type type)
             throws IllegalArgumentException {
 

@@ -1,32 +1,18 @@
 package sample;
 
 
-import config.Configuration;
-import config.Startup;
-import data.Console;
-import iface.IConfiguration;
+import config.ConfigurationBuilder;
+import model.Console;
 
-import java.util.ArrayList;
 
 public class CLITest {
 
-    public static void main(String[] args) throws Exception{
-        CLITest app = new CLITest();
-        app.start(app.configure(new Configuration(new Console())));
+    public static void main(String[] args) throws Exception
+    {
+        StartCLI.launch(new ConfigurationBuilder(new Console())
+                .build().getConfig());
     }
 
-    public IConfiguration configure(IConfiguration config) {
-        config.addControllers(new ArrayList<>() {{
-            add(new TestController());
-        }});
-        return config;
-    }
 
-    public void start(IConfiguration config) {
-        Startup startup = new Startup(config);
-        while (true) {
-            startup.run(config.console().read());
-        }
-    }
 }
 

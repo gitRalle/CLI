@@ -6,26 +6,28 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <summary>Annotate your method with this annotation, if you'd like it mapped to a regex pattern
- * command. Later to be matched against, and called from your console.</summary>
+ * Annotate your methods with this annotation if you would like them to be stored in a map, to be conveniently accessed at runtime.
+ * They are generated through the calling of the config.ConfigurationBuilder.build() method,
+ * and will be accessible at runtime through the config.ConfigurationBuilder.getConfig().map() method.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Command {
 
     /**
-     * <summary>This String defines the whole, or part of the regex pattern to which a Method
-     * annotated with @Command maps to.</summary>
+     * Use this annotation field to specify a keyword to use at runtime to access this method.
+     * Defaults to method.getName().
      *
-     * Defaults to the name of the Method.
      * @return the keyword.
      */
     String keyword() default "";
 
     /**
-     * <summary>A String to be appended to the console, in the case of a partial keyword match.</summary>
+     * Use this annotation field to specify a message which should be appended to the console using a specified
+     * implementation of the iface.IConsole.printerr() method, in the case of a user-input only matching the value of
+     * the optional controller prefix annotation field plus this annotation's keyword annotation field.
      *
-     * @return the String.
+     * @return the message.
      */
-    String partialMatchMessage() default "";
+    String noMatch() default "";
 }

@@ -6,33 +6,33 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <summary>Annotate your class with this annotation, if it declares @Command-annotated methods.</summary>
+ * Annotate your types with this annotation if they declare command annotated methods.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Controller {
 
     /**
-     * <summary>String which determines the initial part of the regex pattern, which @Command-annotated
-     * methods map to.</summary>
+     * Use this annotation field to specify an optional prefix for any declared command annotated methods.
+     * Defaults to className.split("controller")[0].
      *
-     * Defaults to the name-of-the-java-file.split('controller')[0];
      * @return the keyword.
      */
     String keyword() default "";
 
     /**
-     * <summary>Boolean value which determines if the keyword should be omitted in the mapping
-     * process.</summary>
+     * Use this annotation field to flag/un-flag the use of this annotation's keyword annotation field.
      *
-     * @return the boolean value.
+     * @return the ignoreKeyword.
      */
     boolean ignoreKeyword() default false;
 
     /**
-     * <summary>A message to be appended to the console, in the case of a partial match.</summary>
+     * Use this annotation field to specify a message which should be appended to the console using a specified
+     * implementation of the iface.IConsole.printerr() method, in the case of a user-input only matching the value
+     * of this annotation's (optional) keyword annotation field.
      *
      * @return the message.
      */
-    String partialMatchMessage() default "";
+    String noMatch() default "";
 }
