@@ -1,46 +1,97 @@
 # CLI
 java-library
 ## About
-This package is a java library which can help you to easily build a functional
-command-line-interface.
-## Build
-Add the [-parameters] argument to the java compiler to 
-save the names of any local parameters in the relevant 
-java files.  
-Doing so means you are not required to explicitly set the 
-keyword annotation field for any parameters annotated with Arg, 
-unless you'd like for their names to be overridden.
-#### Gradle 
-    compileJava {
-        options.compilerArgs.add("-parameters")
+This java library uses the java reflection api to enable you to easily create a functional command-line-interface.  
+Annotate any methods you need accessed at runtime through the supply of some user input through a console with the proper annotations, 
+and when built will be processed and placed in map for easily retrieval.   
+
+Look at [Sample](#sample) for examples on how to annotate your elements.  
+
+Look at [Configuration](#configuration) to learn how to have your annotated elements processed, and for examples on how to use them in conjunction with your implemented console. 
+
+## Sample
+### Annotate your methods
+    @Command(keyword = "foo", noMatch = "foo []")
+    public void foo()
+    {
+        // code
     }
+Here the keyword property of the method is explictly set to "foo",  
+and the noMatch property of the method, which is a message to be appended to the console in the event of a partial match, is set to "foo []"
+
+    @Command
+    public void foo()
+    {
+        // code
+    }
+Here the keyword property of the method foo is implicitly set to "foo", and the noMatch property is omitted.
+### Annotate your arguments
+Annotate your arguments if you'd like to explicitly set their keyword property, or if you'd like to flag them as being optional.  
+
+    @Command(keyword = "foo")
+    public void foo(@Arg(keyword = "input", optional = true) String input)
+    {
+        // code
+    }
+Here the keyword property of the argument is explicitly set to "input", and the optional property is explicitly set to true.
+    
+    @Command(keyword = "foo")
+    public void foo(@Arg(keyword = "input") String input)
+    {
+        // code
+    }
+Here the keyword property of the argument is explicitly set to "input", and the optional property is implicitly set to false.
+
+    @Command(keyword = "foo")
+    public void foo(String input)
+    {
+        // code
+    }
+Here the keyword property of the argument is implicitly set to "input", and the optional property is implicitly set to false.
+### Annotate your classes
+Annotate your classes if they declare any annotated methods.
+
+    @Controller(keyword = "sample")
+    public class SampleController
+    {
+    
+    }
+Here the keyword property of the class, which adds a prefix to the keyword properties of any annotated methods, is explicitly set to "sample". 
+
+    @Controller
+    public class SampleController
+    {
+    }
+Here the keyword property of the class is implicitly set to "sample".
+
+    @Controller(ignoreKeyword = true)
+    public class SampleController
+    {
+    }
+Here the ignoreKeyword property of the class is explicitly set to true. In this case, no prefix will be added to any annotated methods declared in this class.
 ## Configuration
-#### Build your configuration by calling one of the build methods
-##### Scan the entire classpath for annotated types
+### Build your configuration by calling one of the build methods
+#### Scan the entire classpath for annotated types
 <code>Builder builder = new Builder(new Console()).build();</code>
-##### Scan the specified package for annotated types
+#### Scan the specified package for annotated types
 <code>Builder builder = new Builder(new Console()).build("my.package");</code> 
  
 The class passed to the builder's constructor may be of any type so long as 
 it implements the interface IConsole, or an interface which extends the 
 IConsole interface. 
-
-<br></br>    
-#### Access to the relevant objects through the Builder class
-##### Access to the ReflectionMap (which holds references for your @Command annotated methods)
+### Access to the relevant objects through the Builder class
+#### Access to the ReflectionMap (which holds references for your @Command annotated methods)
 <code>builder.configuration().map();</code>  
-##### Access to the IConsole (which represents your console)
+#### Access to the IConsole (which represents your console)
 <code>builder.configuration().console();</code>
-
-<br></br>  
-#### Connect your IConsole to your ReflectionMap
-##### Auto  
+### Connect your IConsole to your ReflectionMap
+#### Auto  
 <code>StartCLI.launch(builder.configuration());</code>  
 
 Encloses the manual implementation in an infinite loop.  
 Is only a suitable approach if the default implementation of the IConsole 
 interface is being used.
-##### Manual
+#### Manual
     String input = builder.configuration().console().read();
     IReflection reflection = config.map().match(input);
     (reflection != null ? reflection : new IReflection() {
@@ -51,51 +102,17 @@ interface is being used.
             );
         }
     }).invoke(input);
-## Sample
-To see the full documentation on all of the 
-available annotations and their annotation fields, click here!
-(coming soon).
-
-#### Annotate your classes
-    @Controller(ignoreKeyword = true)
-    public class SampleController extends AbstractController {
-
-    private final IConsole console;
-
-    public SampleController(IConsole console) {
-        this.console = console;
+## Build
+Add the [-parameters] argument to the java compiler to 
+save the names of any local parameters in the relevant 
+java files.  
+Doing so means you are not required to explicitly set the 
+keyword annotation field for any parameters annotated with Arg, 
+unless you'd like for their names to be overridden.
+### Gradle 
+    compileJava {
+        options.compilerArgs.add("-parameters")
     }
-    } 
-The above Controller annotation needs to be present in a class if it declares any 
-Command annotated methods.
-
-The above constructor can be used to inject the same 
-instance of the IConsole interface which was passed 
-to the Builder's constructor into any Controller 
-annotated classes. 
-
-#### Annotate your methods
-    @Command(noMatch = "date (-f:str)")
-    public void date(@Arg(keyword = "-f", optional = true) String format)
-    {
-        if (format != null)
-        {
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-                console.println(LocalDateTime.now().format(formatter));
-            }
-            catch (Exception ex) {
-                console.printerr("-f is not a valid format.");
-            }
-        }
-        else
-        {
-            console.println(LocalDateTime.now().toString());
-        }
-    }
-The value of the noMatch annotation field will be appended to the console in the 
-case of a partial match, i.e. when the input matches the name of the method, 
-but not any of its arguments.
 ## Documentation
 link coming soon
 ## Licence
