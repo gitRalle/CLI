@@ -7,19 +7,25 @@ import static java.lang.System.err;
 import static java.lang.System.out;
 
 /**
- * This class declares methods for appending text to a console using java.lang.System.out,
- * and for reading text from a console using java.lang.System.in and a scanner.
+ * This class implements methods for printing text to a console using {@link System#out},<br>
+ * and reading text from a console using {@link System#in},
+ * and an instance of the {@link Scanner} class.
  */
-public class Console implements IConsole {
+public class Console implements IConsole
+{
+    private final Scanner scanner;
 
     /**
-     * This class's scanner object.
+     * Constructs a new <code>Console</code> object.
      */
-    private final static Scanner scanner = new Scanner(System.in);
+    public Console()
+    {
+        this.scanner = new Scanner(System.in);
+    }
 
     /**
-     * Appends the specified text to the console.
-     * @param text the text to be appended.
+     * {@inheritDoc}
+     * @param text the text to be println.
      */
     @Override
     public void println(String text) {
@@ -27,8 +33,8 @@ public class Console implements IConsole {
     }
 
     /**
-     * Appends the specified error text to the console.
-     * @param text the error text to be appended.
+     * {@inheritDoc}
+     * @param text the error text to be println.
      */
     @Override
     public void printerr(String text) {
@@ -36,8 +42,8 @@ public class Console implements IConsole {
     }
 
     /**
-     * Reads and returns the last paragraph of text from the console.
-     * @return the last paragraph of text from the console.
+     * {@inheritDoc}
+     * @return the last line of text.
      */
     @Override
     public String read()

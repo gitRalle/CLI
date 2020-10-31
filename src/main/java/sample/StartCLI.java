@@ -1,36 +1,43 @@
 package sample;
 
-import config.Configuration;
-import config.ConfigurationBuilder;
+import config.AbstractConfiguration;
+import config.ReflectionMap;
 import iface.IReflection;
-import model.Console;
 
 /**
- * <summary>This class presents a sample means to start/run your console application.</summary>
+ * Class represents a sample way to start an application using the com.github.wnebyte.cli library.
  */
-public class StartCLI {
+public class StartCLI
+{
+    private final AbstractConfiguration config;
 
     /**
-     * <summary>The IConfiguration field.</summary>
+     * Constructs a new object using the specified configuration.
+     * @param config the configuration to use.
      */
-    private final Configuration config;
-
-    public StartCLI(Configuration config)
-    {
+    public StartCLI(AbstractConfiguration config) {
+        if (config == null) {
+            throw new IllegalArgumentException(
+                    "config must not be null."
+            );
+        }
         this.config = config;
     }
 
-    public StartCLI() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+    /**
+     * do not use.
+     */
+    public StartCLI() {
+        throw new UnsupportedOperationException(
+                "do not use this constructor."
+        );
     }
 
     /**
-     * <summary>Matches the supplied String input with the keys of the underlying,
-     * configured ReflectionMap. The respective IReflection object is invoked if a match is found.
-     * Otherwise a default invocation is called, resulting in a default String being
-     * outputted into the console.</summary>
-     *
-     * @param input the String to be matched against.
+     * This run method fetches the {@link IReflection} value associated with the specified input through a call to the
+     * {@link ReflectionMap#match(String)} method.<br>If no <code>IReflection</code> value is associated with the
+     * specified input, then a default not found message is appended to the <code>IConsole</code>.
+     * @param input the string -> <code>Pattern</code> to match against.
      */
     public void run(String input) {
             IReflection reflection = config.map().match(input);
@@ -45,33 +52,15 @@ public class StartCLI {
     }
 
     /**
-     * <summary>GET method for the this class's IConfiguration instance.</summary>
-     *
-     * @return the IConfiguration instance.
+     * Quick launch.
+     * @param config the configuration to use.
      */
-    private Configuration getConfig()
-
-    {
-        return config;
-    }
-
-    public static void launch() throws Exception
-    {
-        StartCLI startup = new StartCLI(new ConfigurationBuilder(new Console())
-                .build()
-                .getConfig());
-        while (true)
-        {
-            startup.run(startup.getConfig().console().read());
-        }
-    }
-
-    public static void launch(Configuration config)
+    public static void launch(AbstractConfiguration config)
     {
         StartCLI startup = new StartCLI(config);
         while (true)
         {
-            startup.run(startup.getConfig().console().read());
+            startup.run(config.console().read());
         }
     }
 }

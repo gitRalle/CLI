@@ -2,67 +2,70 @@ package config;
 
 import exception.DefaultedValueException;
 import exception.ParseException;
+import annotation.Command;
 
 import java.util.LinkedList;
 
 /**
  * This class represents the state of a reflectively initialized argument belonging to
- * the most recently reflectively invoked command annotated method.
+ * the most recently reflectively invoked {@link Command} annotated method.
  */
 public final class ArgumentInitializationState {
 
     /**
-     * Any exceptions thrown during the initialization of the pertaining
-     * argument are stored in this exceptions map.
+     * Any <code>Exceptions</code> thrown during the initialization of the
+     * argument are stored in this list of exceptions.
      */
     private final LinkedList<Exception> exceptions;
 
     /**
-     * Constructs a new object with an empty exceptions list.
+     * Constructs a new object with an empty list of exceptions, with default list settings.
      */
     protected ArgumentInitializationState() {
         exceptions = new LinkedList<>();
     }
 
     /**
-     * Constructs a new object and initializes its exceptions list,
-     * and adds the specified exception to the list.
+     * Constructs a new object and initializes its list of exceptions field with default list settings,<br>
+     * and adds the specified <code>Exception</code> to the list.
      *
-     * @param ex the exception to be added to this class's exceptions list.
+     * @param ex the <code>Exception</code> to be added to this object's newly initialized exceptions list.
      */
     protected ArgumentInitializationState(Exception ex) {
         exceptions = new LinkedList<>() {{add(ex);}};
     }
 
     /**
-     * Evaluates and determines whether any DefaultedValueExceptions were thrown during initialization of this
-     * argument.
+     * Evaluates and determines whether a {@link DefaultedValueException} was thrown during
+     * the initialization of the argument.
      *
-     * @return true in the event of a thrown DefaultedValueException during initialisation,
-     * false if a DefaultedValueException was not thrown during initialization.
+     * @return <code>true</code> in the event of a thrown <code>DefaultedValueException</code> during the initialization
+     * of the argument,<br>
+     * <code>false</code> if a <code>DefaultedValueException</code> was not thrown during the initialization of
+     * the argument.
      */
-    public boolean wasDefaulted()
+    public final boolean wasDefaulted()
     {
         return exceptions.stream().anyMatch(ex -> ex instanceof DefaultedValueException);
     }
 
     /**
-     * Evaluates and determines whether any a ParseException was NOT thrown during initialization of this
-     * argument.
+     * Evaluates and determines whether a {@link ParseException} was <b>NOT</b> thrown during the initialization of
+     * the argument.
      *
-     * @return true if no ParseExceptions were thrown during initialization,
-     * false in the event of a thrown ParsException during initialization.
+     * @return <code>true</code> if no <code>ParseException</code> was thrown during the initialization of the argument,<br>
+     * <code>false</code> in the event of a thrown <code>ParsException</code> during the initialization of the argument.
      */
-    public boolean wasSuccessful()
+    public final boolean wasSuccessful()
     {
         return exceptions.stream().noneMatch(ex -> ex instanceof ParseException);
     }
 
     /**
-     * GET method for this class's exceptions list.
-     * @return the exception list.
+     * Returns this class's list of exceptions field.
+     * @return the list of exceptions field associated with this class.
      */
-    protected LinkedList<Exception> exceptions() {
+    protected final LinkedList<Exception> exceptions() {
         return exceptions;
     }
 

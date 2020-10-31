@@ -7,25 +7,24 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * This class is responsible for the storing and querying of the [Regular expression, IReflection] entries
- * created by the config.Configuration class.
+ * Class stores and allows for querying of [RegExp's, {@linkplain IReflection}] entries.
  */
-public class ReflectionMap {
+public final class ReflectionMap {
 
     /**
-     * This hashmap stores all of the [Regular expressions, IReflection] entries,
-     * whom's values are to be invoked when a complete match occurs.
+     * This hashmap stores all of the [Regular Expression, IReflection] entries,
+     * whose's values are to be returned whenever a complete pattern match occurs.
      */
     private final HashMap<String, IReflection> primaryMap;
 
     /**
-     * This hashmap stores all of the [Regular Expressions, IReflection] entries,
-     * whom's values are to be invoked when a partial match occurs.
+     * This hashmap stores all of the [Regular Expression, IReflection] entries,
+     * whose's values are to be returned whenever a partial pattern match occurs.
      */
     private final HashMap<String, IReflection> secondaryMap;
 
     /**
-     * This constructor sets and initializes both maps with default map settings.
+     * Constructor a new object and initializes both maps with default map settings.
      */
     protected ReflectionMap() {
         primaryMap = new HashMap<>(16, 0.75f);
@@ -33,14 +32,14 @@ public class ReflectionMap {
     }
 
     /**
-     * This method returns the IReflection value to which the specified key is mapped, or null if
-     * neither of this class's maps contain any mapping for the key.
-     * More formally, if Pattern.compile(entry.getKey()).matcher(key).matches() then the IReflection value
-     * associated with entry.getKey() is returned.
+     * This method returns the {@link IReflection} value to which the specified key is mapped, or <code>null</code> if
+     * neither of this class's maps contain any mapping for the key.<br>
+     * More formally, if <code>Pattern.compile(entry.getKey()).matcher(key).matches()</code><br>then the IReflection
+     * value associated with<br><code>entry.getKey()</code> is returned.
      *
      * @param key the key who's associated value is to be returned.
-     * @return the value to which the specified key is mapped, or null if neither of this class's maps contain
-     * any mapping for the key.
+     * @return the value to which the specified key is mapped, or <code>null</code> if neither of this class's
+     * maps contain any mapping for the key.
      */
     public @Nullable IReflection match(String key) {
         final java.util.Map.Entry<String, IReflection> entry =
@@ -55,12 +54,12 @@ public class ReflectionMap {
     }
 
     /**
-     * Associates the specified value with the specified key in this class's primary map.
+     * Associates the specified value with the specified key in this class's {@link #primaryMap}.<br>
      * If the map previously contained a mapping for the key, the old value is replaced.
      *
      * @param key key with which the specified value is to be associated.
      * @param value value to be associated with the specified key.
-     * @return the previous value associated with the key, or null if there was no mapping for the key.
+     * @return the previous value associated with the key, or <code>null</code> if there was no mapping for the key.
      */
     @Nullable IReflection put(String key, IReflection value) {
         return primaryMap.put(key, value);
@@ -68,12 +67,12 @@ public class ReflectionMap {
 
     /**
      * Appends the value associated with the specified key to the specified new value and puts it into
-     * this class's secondary map, if the value associated with the specified key is not null.
+     * this class's {@link #secondaryMap}, if the value associated with the specified key is not <code>null</code>.
      * Otherwise performs a put operation using the specified key and specified new value.
      *
      * @param key key with which the specified value is to be associated.
      * @param newValue the new value to be appended to the value associated with the specified key.
-     * @return the previous value associated with the key, or null if there was no mapping for this key.
+     * @return the previous value associated with the key, or <code>null</code> if there was no mapping for this key.
      */
     @Nullable IReflection append(@Nullable String key, IReflection newValue) {
         IReflection previousValue = secondaryMap.get(key);
@@ -88,7 +87,8 @@ public class ReflectionMap {
     }
 
     /**
-     * Performs an Arrays.toString() operation on this class's primary map's key set and returns the result.
+     * Performs an {@link Arrays#toString(Object[])} operation on this class's {@link #primaryMap}'s
+     * <code>KeySet</code> and returns the result.
      * @return the keys of this class's primary map in the form of a string.
      */
     public String keys() {
@@ -96,7 +96,8 @@ public class ReflectionMap {
     }
 
     /**
-     * Performs an Arrays.toString() operation on this class's secondary map's key set and returns the result.
+     * Performs an {@link Arrays#toString(Object[])} operation on this class's {@link #secondaryMap}'s
+     * <code>KeySet</code> and returns the result.
      * @return the keys of this class's secondary map in the form of a string.
      */
     public String noMatchKeys() {

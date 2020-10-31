@@ -1,9 +1,9 @@
 package exception;
 
+import java.lang.reflect.Method;
 /**
- * Class represents an exception to be thrown in the event of the config.Configuration class
- * forcefully having to assign a default value to a primitive datatype when in the process of invoking a method
- * reflectively.
+ * Thrown to indicate a process having to default the value of one of the parameters of a soon to be reflectively invoked
+ * {@link java.lang.reflect.Method}.
  */
 public class DefaultedValueException extends Exception {
 

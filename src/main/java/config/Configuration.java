@@ -1,7 +1,9 @@
 package config;
 
+import java.lang.reflect.*;
+import annotation.*;
 import iface.*;
-import model.BaseController;
+import model.AbstractController;
 import model.MethodBundle;
 import model.ParamBundle;
 import exception.DefaultedValueException;
@@ -10,7 +12,6 @@ import exception.ParseException;
 import exception.IllegalAnnotationException;
 
 import org.jetbrains.annotations.NotNull;
-import java.lang.reflect.*;
 import java.util.*;
 
 import static util.AnnotationUtils.*;
@@ -20,65 +21,41 @@ import static util.ObjectUtils.toObject;
 import static util.ObjectUtils.toDefaultValue;
 
 /**
- * This class's protected and private methods are responsible for carrying out the runtime annotation processing for
- * elements annotated with annotation.@Controller, annotation.@Command, and annotation.@Parameter.
- *
- * This class can be used to access the configured ReflectionMap, and the IConsole interface.
+ * This class's protected methods are responsible for populating this class's {@link ReflectionMap},<br>
+ * by carrying out runtime annotation processing of elements annotated with the annotations declared in
+ * the {@link annotation} package.
  */
-public final class Configuration {
+public final class Configuration extends AbstractConfiguration {
 
+    // Todo: refactor the regexSet field into the ReflectionMap class.
     /**
-     * <summary>The IConsole field.</summary>
-     */
-    private final IConsole console;
-
-    /**
-     * <summary>The ReflectionMap field.</summary>
-     */
-    private final ReflectionMap map;
-
-    /**
-     * <summary>A Set which is used to store copies of the regex patterns;
-     * minus the sub-regex patterns derived from any optional arguments.
-     *
-     * Is used to check for distinctiveness between regex patterns,
-     * so that no duplicates are put into the underlying map.</summary>
+     * This set is used to store distinct regular expressions created by this class's
+     * process method.
      */
     private final Set<String> regexSet = new HashSet<>();
 
     /**
-     * This constructor sets this class's IConsole field using the parameterized console,
-     * and constructs and sets this class's ReflectionMap field.
-     *
-     * @param console this IConsole instance will be assigned to this class' IConsole field.
+     * Constructs a new object and initializes this class's IConsole field and {@link ReflectionMap} field.
+     * @param console a class which implements the IConsole interface.
      */
     protected Configuration(IConsole console) {
-        this.console = console;
-        this.map = new ReflectionMap();
+        super(console);
     }
 
+    // Todo: introduce a separate method/class/interface which validates the input received by this method.
     /**
-     * This constructor should not be invoked.
+     * This process method uses the {@link java.lang.reflect} api to create [Regular Expression,
+     * {@link iface.IReflection}] entries
+     * from the properties of elements annotated with the annotations declared in the
+     * {@link annotation} package.
      *
-     * @throws UnsupportedOperationException if this constructor is invoked.
-     */
-    protected Configuration() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException(
-                "this Constructor is not be used."
-        );
-    }
-
-    /**
-     * The heavy-lifting processing method, it uses the java.reflection api to create regular expressions
-     * from the properties of command-annotated methods.
-     *
-     * @param controllers a collection of instantiated controller-annotated classes to be processed.
-     * @throws IllegalAnnotationException in the event of insufficient annotations being present, or in the event of
+     * @param controllers a set of instantiated {@link Controller} annotated classes to be processed.
+     * @throws IllegalAnnotationException in the event of insufficient annotations, or in the event of
      * an annotated method not having the void modifier, or in the event of an annotated method not being an instance method,
-     * or in the event of the same regex pattern being derived from two or more annotated methods,
-     * or in the event of a annotated-method's argument not being a primitive datatype/wrapper class.
+     * or in the event of the same regular expression being derived from two or more annotated elements,
+     * or in the event of an annotated method's argument not being of a primitive datatype or wrapper class.
      */
-    protected void addControllers(final @NotNull Collection<Object> controllers) throws IllegalAnnotationException
+    protected void process(Set<Object> controllers) throws IllegalAnnotationException
     {
         for (Object object : controllers) {
             Class<?> objectClass = object.getClass();
@@ -124,7 +101,8 @@ public final class Configuration {
                         LinkedList<String> nonOptionalArgs = new LinkedList<>();
 
                         int i = 0;
-                        for (Parameter param : method.getParameters()) {
+                        for (Parameter param : method.getParameters())
+                        {
                             if (!isPrimitive(param.getType())) {
                                 throw new IllegalAnnotationException(
                                         "parameter of method annotated with @Command must be primitive."
@@ -154,7 +132,7 @@ public final class Configuration {
                                         "and it's non-optional arguments must be distinct."
                         );
                     }
-                      map.put(regex.toString(), (input) -> {
+                      super.map().put(regex.toString(), (input) -> {
                         try {
                             invoke(new MethodBundle(object, method, params), input);
                         }
@@ -166,7 +144,7 @@ public final class Configuration {
                     if (hasNoMatch(method)) {
                         String key = "^" + (hasIgnoreKeyword(objectClass) ? "" : getKeyword(objectClass)
                                 .concat("\\s")).concat(getKeyword(method)).concat("(|.*)$");
-                        map.append(key, (input) -> console.printerr(getNoMatch(method)));
+                        super.map().append(key, (input) -> super.console().printerr(getNoMatch(method)));
                     }
                 }
             }
@@ -174,31 +152,16 @@ public final class Configuration {
     }
 
     /**
-     * GET method for this class's IConsole field.
+     * This method parses the specified input string and uses its content to initialize the arguments of
+     * the specified method, and then invokes the specified method.<br>
+     * If the delimiter for one or more of the specified method's arguments are not present as a
+     * substring of the input, then the value of that parameters is defaulted.
+     * The value of the defaulted parameter is determined by the type of the parameter.
      *
-     * @return the IConsole instance.
-     */
-    public IConsole console() {
-        return console;
-    }
-
-    /**
-     * GET method for this class's ReflectionMap field.
-     *
-     * @return the ReflectionMap instance.
-     */
-    public ReflectionMap map() {
-        return map;
-    }
-
-    /**
-     * When a match occurs at runtime this method is called,
-     * the annotated-method's arguments are then parsed and instantiated from the input string,
-     * and then the annotated-method is invoked.
-     *
-     * @param methodBundle object which holds a bundle of information pertaining to the to be invoked annotated-method.
-     * @param input a user input.
-     * @throws Exception in the event of an unforeseen failure in the invocation of the annotated-method.
+     * @param methodBundle the <code>MethodBundle</code> object.
+     * @param input the <code>String</code> from which the specified method's arguments are to be parsed.
+     * @throws Exception in the event of an <code>Exception</code> being thrown during the call to
+     * {@link java.lang.reflect.Method#invoke(Object, Object...)} on the specified method.
      */
     private void invoke(@NotNull MethodBundle methodBundle, String input)
             throws Exception
@@ -206,9 +169,8 @@ public final class Configuration {
         Object[] args = new Object[methodBundle.getParams().length];
         Object arg = null;
 
-        if (methodBundle.getObject().getClass().getSuperclass() == BaseController.class) {
-            ((BaseController) methodBundle.getObject()).invokeState()
-                    .clear();
+        if (methodBundle.getObject().getClass().getSuperclass() == AbstractController.class) {
+            ((AbstractController) methodBundle.getObject()).invokeState().clear();
         }
 
         int i = 0;
@@ -217,11 +179,12 @@ public final class Configuration {
             {
                 arg = toObject(paramBundle.getType(), splitAfterFirst(input, paramBundle.getName()));
             }
-            catch (ParseException | NoSuchDelimiterException ex) {
+            catch (ParseException | NoSuchDelimiterException ex)
+            {
                 arg = toDefaultValue(paramBundle.getType());
 
-                if (methodBundle.getObject().getClass().getSuperclass() == BaseController.class) {
-                    ((BaseController) methodBundle.getObject()).invokeState()
+                if (methodBundle.getObject().getClass().getSuperclass() == AbstractController.class) {
+                    ((AbstractController) methodBundle.getObject()).invokeState()
                             .append(paramBundle.getName(), ex)
                             .append(paramBundle.getName(), new DefaultedValueException
                                     ("'" + paramBundle.getName() + "' was defaulted."));

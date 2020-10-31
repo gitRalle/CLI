@@ -3,23 +3,16 @@ package model;
 import java.lang.reflect.Method;
 
 /**
- * This class is responsible for bundling relevant information pertaining to an instance method.
+ * This class bundles relevant information pertaining to a {@link java.lang.reflect.Method},<br>
+ * such as the method itself, the instantiated class on which it acts, and information pertaining to its
+ * parameters in the form of an array of {@link model.ParamBundle} objects.
  */
 public class MethodBundle {
 
-    /**
-     * The class to which the method belong.
-     */
     private final Object object;
 
-    /**
-     * The method itself.
-     */
     private final Method method;
 
-    /**
-     * The method's parameters.
-     */
     private final ParamBundle[] params;
 
     /**
@@ -36,24 +29,24 @@ public class MethodBundle {
     }
 
     /**
-     * Returns this class's method.
-     * @return this class's method.
+     * Returns this class's <code>Method</code> field.
+     * @return the <code>Method</code> field associated with this class.
      */
     public Method getMethod() {
         return method;
     }
 
     /**
-     * Returns this class's paramBundle.
-     * @return this class's paramBundle.
+     * Returns this class's <code>ParamBundle</code> field.
+     * @return the <code>ParamBundle</code> field associated with this class.
      */
     public ParamBundle[] getParams() {
         return params;
     }
 
     /**
-     * Returns this class's object.
-     * @return this class's object.
+     * Returns this class's <code>Object</code> field.
+     * @return the <code>Object</code> field associated with this class.
      */
     public Object getObject() {
         return object;

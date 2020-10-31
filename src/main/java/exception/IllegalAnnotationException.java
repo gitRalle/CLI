@@ -1,8 +1,10 @@
 package exception;
 
+import java.util.Set;
+
 /**
- * Class represents an exception to be thrown by the config.Configuration class in the event of
- * a processed annotated element not meeting certain requirements.
+ * Thrown to indicate a processed set of annotation elements not meeting a certain set of requirements.
+ * @see config.Configuration#process(Set)
  */
 public class IllegalAnnotationException extends Exception {
 

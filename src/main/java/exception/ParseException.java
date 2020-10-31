@@ -1,8 +1,8 @@
 package exception;
 
+import java.lang.reflect.Type;
 /**
- * This class represents an exception to be thrown by the util.ObjectUtils.toObject() method in the event of
- * a failure in parsing a parameterized string input into a parameterized type.
+ * Thrown to indicate a failure in the parsing of a {@link java.lang.String} into a {@link java.lang.reflect.Type}.
  */
 public class ParseException extends Exception {
 

@@ -1,18 +1,18 @@
 package sample;
 
-
-import config.ConfigurationBuilder;
+import config.Builder;
+import iface.IReflection;
 import model.Console;
-
 
 public class CLITest {
 
     public static void main(String[] args) throws Exception
     {
-        StartCLI.launch(new ConfigurationBuilder(new Console())
-                .build().getConfig());
-    }
+        Builder builder = new Builder(new Console()).build();
 
+        String input = builder.configuration().console().read();
+
+    }
 
 }
 

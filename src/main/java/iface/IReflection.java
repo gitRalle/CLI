@@ -1,16 +1,16 @@
 package iface;
 
+import java.lang.reflect.Method;
 /**
- * This functional interface declares a method for invoking a java method reflectively at runtime.
+ * This functional interface declares the following abstract method: {@link IReflection#invoke(String)}.
  */
 public interface IReflection {
 
     /**
-     * Calling this method will initialize the underlying method's parameters with values parsed from the
-     * specified input, and subsequently invoke the underlying method reflectively.
+     * Calling this abstract method is meant to initialize the parameters of and start a reflective invocation
+     * of an underlying {@link java.lang.reflect.Method}.
      *
-     * @param input the input appended to a console by a user, the contents of this input will determine which
-     *              parameters, and which parameter values are initialized before invocation of the underlying method.
+     * @param input the values of the underlying method's parameters are meant to be parsed from this string.
      */
     void invoke(String input);
 }

@@ -5,7 +5,7 @@ import exception.ParseException;
 import java.lang.reflect.Type;
 
 /**
- * This class declares utility methods used by the config.Configuration class for working with objects.
+ * This class declares utility methods for working with instances of the {@link java.lang.Object} class.
  */
 public class ObjectUtils {
 
@@ -16,7 +16,7 @@ public class ObjectUtils {
      * @param value the value.
      * @return an object.
      * @throws IllegalArgumentException in the event of a null specified value.
-     * @throws ParseException in the event of a NumberFormatException being thrown during
+     * @throws ParseException in the event of a {@link java.lang.NumberFormatException} being thrown during
      * parsing.
      */
     public static Object toObject(Type type, String value)
@@ -143,8 +143,8 @@ public class ObjectUtils {
      * specified type.
      *
      * @param type the type.
-     * @return a defaulted object.
-     * @throws IllegalArgumentException in the event of a specified type not being a primitive datatype/wrapper class.
+     * @return an object with a default value, based on the specified type.
+     * @throws IllegalArgumentException in the event of a specified type not being a primitive datatype or wrapper class.
      */
     public static Object toDefaultValue(Type type)
             throws IllegalArgumentException {

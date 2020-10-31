@@ -14,17 +14,17 @@ import java.util.HashSet;
 import static util.StringUtils.isEmptyOrNull;
 
 /**
- * This class declares utility methods used by the config.Configuration class for working with the annotations
- * declared in the annotation package.
+ * This class declares utility methods for working with the runtime annotations
+ * declared in the {@link annotation} package.
  */
 public class AnnotationUtils {
 
     /**
-     * Evaluates and determines whether the specified class is annotated with the controller annotation.
+     * Evaluates and determines whether the specified class is annotated with the {@link annotation.Controller} annotation.
      *
      * @param controller the class to be evaluated.
-     * @return true if the specified class is annotated with the controller annotation,
-     * false if the type is not annotated with the controller annotation.
+     * @return <code>true</code> if the specified class is annotated with the controller annotation,<br>
+     * <code>false</code> if the type is not annotated with the controller annotation.
      */
     public static boolean hasAnnotation(Class<?> controller) {
         assert controller != null;
@@ -32,11 +32,11 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates and determines whether the specified method is annotated with the command annotation.
+     * Evaluates and determines whether the specified method is annotated with the {@link annotation.Command} annotation.
      *
      * @param method the method to be evaluated.
-     * @return true if the specified method is annotated with the command annotation,
-     * false if the method is not annotated with the command annotation.
+     * @return <code>true</code> if the specified method is annotated with the command annotation,<br>
+     * <code>false</code> if the method is not annotated with the command annotation.
      */
     public static boolean hasAnnotation(Method method) {
         assert method != null;
@@ -44,11 +44,11 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates and determines whether the specified parameter is annotated with the arg annotation.
+     * Evaluates and determines whether the specified parameter is annotated with the {@link annotation.Arg} annotation.
      *
      * @param param the parameter to be evaluated.
-     * @return true if the specified parameter is annotated with the arg annotation,
-     * false if the parameter is not annotated with the arg annotation.
+     * @return <code>true</code> if the specified parameter is annotated with the arg annotation,<br>
+     * <code>false</code> if the parameter is not annotated with the arg annotation.
      */
     public static boolean hasAnnotation(Parameter param) {
         assert param != null;
@@ -56,11 +56,11 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates and determines whether the specified method has the modifier static.
+     * Evaluates and determines whether the specified method has the modifier <code>static</code>.
      *
      * @param method the method to be evaluated.
-     * @return true if the specified method does have the modifier static,
-     * false if the method does not have the modifier static.
+     * @return <code>true</code> if the specified method does have the modifier <code>static</code>,<br>
+     * <code>false</code> if the method does not have the modifier <code>static</code>.
      */
     public static boolean isStatic(Method method) {
         assert method != null;
@@ -68,25 +68,26 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates and determines whether the specified method has the return type void.
+     * Evaluates and determines whether the specified method has the return type <code>void</code>.
      *
      * @param method the method to be evaluated.
-     * @return true if the specified method does have the return type void,
-     * false if the method does not have the return type void.
+     * @return <code>true</code> if the specified method does have the return type <code>void</code>,<br>
+     * <code>false</code> if the method does not have the return type <code>void</code>.
      */
-    public static boolean isVoid(@NotNull Method method) {
+    public static boolean isVoid(Method method) {
+        assert method != null;
         return method.getReturnType().equals(Void.TYPE);
     }
 
     /**
-     * Evaluates and determines whether the specified class is annotated with the controller annotation and
-     * has its annotation field ignoreKeyword flagged as true.
+     * Evaluates and determines whether the specified class is annotated with the {@link annotation.Controller}
+     * annotation, and has its annotation field {@link Controller#ignoreKeyword()} set to <code>true</code>.
      *
      * @param controller the class to be evaluated.
-     * @return true if the specified class is annotated with the controller annotation and
-     * has its annotation field ignoreKeyword flagged as true,
-     * false if the class is not annotated with the controller annotation, or the class is annotated with the controller
-     * annotation and has its annotation field ignoreKeyword flagged as false.
+     * @return <code>true</code> if the specified class is annotated with the controller annotation and
+     * has its annotation field ignoreKeyword set to true,<br>
+     * <code>false</code> if the class is not annotated with the controller annotation, or the class is annotated with
+     * the controller annotation and has its annotation field ignoreKeyword set to <code>false</code>.
      */
     public static boolean hasIgnoreKeyword(Class<?> controller) {
         assert controller != null;
@@ -95,14 +96,14 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates and determines whether the specified parameter is annotated with the arg annotation and has its
-     * annotation field optional flagged as true.
+     * Evaluates and determines whether the specified parameter is annotated with the {@link annotation.Arg} annotation,
+     * and has its annotation field {@link Arg#optional()} set to <code>true</code>.
      *
      * @param param the parameter to be evaluated.
-     * @return true if the specified parameter is annotated with the arg annotation and has its
-     * annotation field optional flagged as true,
-     * false if the parameter is not annotated with the arg annotation, or the parameter is annotated with the arg
-     * annotation and has its annotation field optional flagged as false.
+     * @return <code>true</code> if the specified parameter is annotated with the arg annotation, and has its
+     * annotation field optional set to true,<br>
+     * <code>false</code> if the parameter is not annotated with the arg annotation, or the parameter is annotated with
+     * the arg annotation, and has its annotation field optional set to <code>false</code>.
      */
     public static boolean isOptional(Parameter param) {
         assert param != null;
@@ -111,14 +112,14 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates and determines whether a specified method is annotated with the command annotation and has a
-     * non-default valued noMatch annotation field.
+     * Evaluates and determines whether a specified method is annotated with the {@link annotation.Command} annotation,
+     * and has a non-default value {@link Command#noMatch()} annotation field.
      *
      * @param method the method to be evaluated.
-     * @return true if the specified method is annotated with the command annotation and has its
-     * annotation field noMatch with a non-default value,
-     * false if the method is not annotated with the command annotation, or the method is annotated with the command
-     * annotation and has a non-default valued noMatch annotation field.
+     * @return <code>true</code> if the specified method is annotated with the command annotation, and has its
+     * annotation field noMatch with a non-default value,<br>
+     * <code>false</code> if the method is not annotated with the command annotation, or the method is annotated with
+     * the command annotation, and has a non-default value noMatch annotation field.
      */
     public static boolean hasNoMatch(Method method) {
         assert method != null;
@@ -127,10 +128,12 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the specified method's noMatch annotation field.
+     * Returns the specified {@link Command} annotated method's {@link Command#noMatch()} annotation field.
      *
      * @param method the method who's noMatch annotation field is to be returned.
-     * @return the noMatch field of the specified method.
+     * @return the noMatch field of the specified method, if the method is annotated with the command annotation,
+     * and has a non-default noMatch field,<br>
+     * otherwise returns <code>null</code>.
      */
     public static @Nullable String getNoMatch(Method method) {
         assert method != null;
@@ -139,11 +142,13 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the specified class's keyword annotation field if the class is annotated
-     * with the controller annotation.
+     * Returns the specified class's {@link Controller#keyword()} annotation field if the class is annotated
+     * with the {@link Controller} annotation.
      *
      * @param controller the controller annotated class whose keyword annotation field is to be returned.
-     * @return the keyword annotation field of the specified controller annotated class.
+     * @return the keyword annotation field of the specified controller annotated class, if the class is annotated
+     * with the controller annotation and has a non-default value keyword,<br>
+     * otherwise returns <code>controller.getSimpleName().toLowerCase().split("controller")[0];</code>
      */
     public static String getKeyword(Class<?> controller) {
         assert controller != null && controller.isAnnotationPresent(Controller.class);
@@ -153,11 +158,13 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the specified method's keyword annotation field if the method is annotated
-     * with the command annotation.
+     * Returns the specified method's {@link Command#keyword()} annotation field if the method is annotated
+     * with the {@link Command} annotation.
      *
      * @param method the command annotated method whose keyword annotation field is to be returned.
-     * @return the keyword annotation field of the specified command annotated method.
+     * @return the keyword annotation field of the specified command annotated method, if the method is annotated
+     * with the command annotation, and has a non-default value keyword annotation field,<br>
+     * otherwise returns <code>method.getName().toLowerCase();</code>
      */
     public static String getKeyword(Method method) {
         assert method != null && method.isAnnotationPresent(Command.class);
@@ -166,12 +173,12 @@ public class AnnotationUtils {
     }
 
     /**
-     * Returns the specified parameter's keyword annotation field if the parameter is annotated
-     * with the arg annotation, otherwise returns the local name of the parameter in lower case.
+     * Returns the specified parameter's {@link Arg#keyword()} annotation field, if the parameter is annotated
+     * with the {@link Arg} annotation, otherwise returns <code>param.getName().toLowerCase();</code>
      *
      * @param param the arg annotated parameter whose keyword annotation field is to be returned.
-     * @return the keyword annotation field if the specified parameter is annotated with the arg
-     * annotation, otherwise returns the local name of the parameter in lower case.
+     * @return the keyword annotation field, if the specified parameter is annotated with the arg
+     * annotation,<br>otherwise returns <code>param.getName().toLowerCase();</code>
      */
     public static @NotNull String getKeyword(Parameter param) {
         assert param != null;
@@ -183,11 +190,11 @@ public class AnnotationUtils {
     }
 
     /**
-     * Evaluates whether a specified class is a primitive datatype/wrapper class.
+     * Evaluates whether a specified class is a primitive datatype or a wrapper class.
      *
      * @param object the class to be evaluated.
-     * @return true if the specified class is a primitive datatype/wrapper class,
-     * false if the specified class is not a primitive datatype/wrapper class.
+     * @return <code>true</code> if the specified class is a primitive datatype or a wrapper class,<br>
+     * <code>false</code> if the specified class is not a primitive datatype or a wrapper class.
      */
     public static boolean isPrimitive(Class<?> object) {
         assert object != null;

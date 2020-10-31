@@ -1,8 +1,7 @@
 package exception;
 
 /**
- * This class represents an exception to be thrown by the util.StringUtils.splitAfterFirst() method in the event of
- * a parameterized string delimiter input not being present as a substring in another parameterized string input.
+ * Thrown to indicate a string delimiter not being present as a substring in another string.
  */
 public class NoSuchDelimiterException extends Exception {
 

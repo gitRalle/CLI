@@ -5,7 +5,7 @@ import exception.NoSuchDelimiterException;
 import java.util.*;
 
 /**
- * This class declares utility methods used by the config.Configuration class for working with strings.
+ * This class declares utility methods for working with instances of the {@link java.lang.String} class.
  */
 public class StringUtils {
 
@@ -29,10 +29,6 @@ public class StringUtils {
             );
         }
         return s.split("\\s".concat(delimiter).concat("\\s"), 2)[1].split("\\s", 2)[0];
-    }
-
-    public static String normalize(String s) {
-        return s.replaceAll("\\s{2}+", "\\s");
     }
 
     /**
