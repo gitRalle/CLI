@@ -1,9 +1,9 @@
 # CLI
 java-library
 ## About
-This java library uses the java reflection api to enable you to easily create a functional command-line-interface.  
+This java library uses the java reflection api to enable you to quickly and easily create a functional command-line-interface.  
 Annotate any methods you need accessed at runtime through the supply of some user input through a console with the proper annotations, 
-and when built will be processed and placed in map for easily retrieval.   
+and when built will be processed and placed in map for easy retrieval and invocation.   
 
 Look at [Sample](#sample) for examples on how to annotate your elements.  
 
@@ -11,6 +11,8 @@ Look at [Configuration](#configuration) to learn how to have your annotated elem
 
 ## Sample
 ### Annotate your methods
+Annotate your methods if you'd like them mapped as commands.
+
     @Command
     public void foo()
     {
@@ -25,8 +27,8 @@ Here the keyword property of the method foo is implicitly set to "foo".
     }
 Here the keyword property of the method is explictly set to "foo",  
 and the noMatch property of the method, which is a message to be appended to the console in the event of a partial match, is set to "foo []"
-### Annotate your parameters
-Annotate your arguments if you'd like to explicitly set their keyword property, or if you'd like to flag them as being optional.  
+### Annotate your arguments
+Annotate your annotated method's arguments if you'd like to explicitly set their keyword property, or if you'd like to flag them as being optional.  
 
     @Command(keyword = "foo")
     public void foo(String input)
@@ -48,21 +50,21 @@ Here the keyword property of the argument is explicitly set to "input", and the 
         // code
     }
 Here the keyword property of the argument is explicitly set to "input", and the optional property is explicitly set to true.
-### Annotate your types
+### Annotate your classes
 Annotate your classes if they declare any annotated methods.
 
     @Controller
     public class SampleController
     {
     }
-Here the keyword property of the class is implicitly set to "sample".
+Here the keyword property of the class, which adds a prefix to the keyword properties of any annotated methods, is implicitly set to "sample".
 
     @Controller(keyword = "sample")
     public class SampleController
     {
     
     }
-Here the keyword property of the class, which adds a prefix to the keyword properties of any annotated methods, is explicitly set to "sample". 
+Here the keyword property of the class is explicitly set to "sample". 
 
     @Controller(ignoreKeyword = true)
     public class SampleController
@@ -70,11 +72,11 @@ Here the keyword property of the class, which adds a prefix to the keyword prope
     }
 Here the ignoreKeyword property of the class is explicitly set to true. In this case, no prefix will be added to any annotated methods declared in this class.
 ## Configuration
-### Build your configuration by calling one of the build methods
-#### Scan the entire classpath for annotated types
+Your annotated elements are processed by calling one of the two available build methods.
+### Scan the entire classpath for annotated types
     Builder builder = new Builder(new Console()).build();
 
-#### Scan the specified package for annotated types
+### Scan the specified package for annotated types
     Builder builder = new Builder(new Console()).build("my.package");
     
 The class passed to the builder's constructor may be of any type so long as it implements the interface IConsole, 
