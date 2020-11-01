@@ -11,6 +11,13 @@ Look at [Configuration](#configuration) to learn how to have your annotated elem
 
 ## Sample
 ### Annotate your methods
+    @Command
+    public void foo()
+    {
+        // code
+    }
+Here the keyword property of the method foo is implicitly set to "foo".
+
     @Command(keyword = "foo", noMatch = "foo []")
     public void foo()
     {
@@ -18,23 +25,16 @@ Look at [Configuration](#configuration) to learn how to have your annotated elem
     }
 Here the keyword property of the method is explictly set to "foo",  
 and the noMatch property of the method, which is a message to be appended to the console in the event of a partial match, is set to "foo []"
-
-    @Command
-    public void foo()
-    {
-        // code
-    }
-Here the keyword property of the method foo is implicitly set to "foo", and the noMatch property is omitted.
-### Annotate your arguments
+### Annotate your parameters
 Annotate your arguments if you'd like to explicitly set their keyword property, or if you'd like to flag them as being optional.  
 
     @Command(keyword = "foo")
-    public void foo(@Arg(keyword = "input", optional = true) String input)
+    public void foo(String input)
     {
         // code
     }
-Here the keyword property of the argument is explicitly set to "input", and the optional property is explicitly set to true.
-    
+Here the keyword property of the argument is implicitly set to "input", and the optional property is implicitly set to false.
+
     @Command(keyword = "foo")
     public void foo(@Arg(keyword = "input") String input)
     {
@@ -43,13 +43,19 @@ Here the keyword property of the argument is explicitly set to "input", and the 
 Here the keyword property of the argument is explicitly set to "input", and the optional property is implicitly set to false.
 
     @Command(keyword = "foo")
-    public void foo(String input)
+    public void foo(@Arg(keyword = "input", optional = true) String input)
     {
         // code
     }
-Here the keyword property of the argument is implicitly set to "input", and the optional property is implicitly set to false.
-### Annotate your classes
+Here the keyword property of the argument is explicitly set to "input", and the optional property is explicitly set to true.
+### Annotate your types
 Annotate your classes if they declare any annotated methods.
+
+    @Controller
+    public class SampleController
+    {
+    }
+Here the keyword property of the class is implicitly set to "sample".
 
     @Controller(keyword = "sample")
     public class SampleController
@@ -57,12 +63,6 @@ Annotate your classes if they declare any annotated methods.
     
     }
 Here the keyword property of the class, which adds a prefix to the keyword properties of any annotated methods, is explicitly set to "sample". 
-
-    @Controller
-    public class SampleController
-    {
-    }
-Here the keyword property of the class is implicitly set to "sample".
 
     @Controller(ignoreKeyword = true)
     public class SampleController
@@ -72,28 +72,36 @@ Here the ignoreKeyword property of the class is explicitly set to true. In this 
 ## Configuration
 ### Build your configuration by calling one of the build methods
 #### Scan the entire classpath for annotated types
-<code>Builder builder = new Builder(new Console()).build();</code>
+    Builder builder = new Builder(new Console()).build();
+
 #### Scan the specified package for annotated types
-<code>Builder builder = new Builder(new Console()).build("my.package");</code> 
- 
-The class passed to the builder's constructor may be of any type so long as 
-it implements the interface IConsole, or an interface which extends the 
-IConsole interface. 
-### Access to the relevant objects through the Builder class
-#### Access to the ReflectionMap (which holds references for your @Command annotated methods)
-<code>builder.configuration().map();</code>  
-#### Access to the IConsole (which represents your console)
-<code>builder.configuration().console();</code>
-### Connect your IConsole to your ReflectionMap
+    Builder builder = new Builder(new Console()).build("my.package");
+    
+The class passed to the builder's constructor may be of any type so long as it implements the interface IConsole, 
+or an interface which extends the IConsole interface.  
+
+If any Controller annotated type declares a constructor which takes as it only argument, an instance of a class which implements the IConsole interface, 
+the same instance which was passed to the Builder's constructor will be injected into the declared constructor.  
+If not, a default/un-parameterized constructor needs to be available so that the class can be instantiated reflectively.
+
+### Builder class
+    ReflectionMap map = builder.configuration().map();
+Returns the map which holds the objects needed to invoke your annotated methods.  
+
+    IConsole console = builder.configuration().console();
+Returns the console as it was implemented and passed to the Builder's constructor.   
+
+### Start your application
 #### Auto  
 <code>StartCLI.launch(builder.configuration());</code>  
 
 Encloses the manual implementation in an infinite loop.  
 Is only a suitable approach if the default implementation of the IConsole 
 interface is being used.
+
 #### Manual
     String input = builder.configuration().console().read();
-    IReflection reflection = config.map().match(input);
+    IReflection reflection = builder.configuration().map().match(input);
     (reflection != null ? reflection : new IReflection() {
         @Override
         public void invoke(String input) {
